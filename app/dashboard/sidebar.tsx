@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { 
@@ -27,6 +28,7 @@ const Sidebar = ({ activeView, setActiveView }: any) => {
     { id: 'collectes', icon: <Truck size={20} />, label: 'Mes Collectes' },
     { id: 'points', icon: <Award size={20} />, label: 'Impact RSE' },
     { id: 'settings', icon: <Settings size={20} />, label: 'Paramètres' },
+    { id: 'home', icon: <LayoutDashboard size={20} />, label: 'Accueil', href: '/' },
   ];
 
   const handleNavClick = (id: string) => {
@@ -76,16 +78,32 @@ const Sidebar = ({ activeView, setActiveView }: any) => {
         <nav className="flex-grow px-4 mt-8 space-y-2">
           {menuItems.map((item) => {
             const isActive = activeView === item.id;
+            const buttonClass = `w-full flex items-center justify-between px-5 py-4 rounded-[20px] transition-all duration-300 group ${isActive ? 'bg-[#00674F] text-white shadow-xl shadow-[#00674F]/10' : 'text-white/50 hover:bg-white/5 hover:text-white'}`;
+
+            if (item.href) {
+              return (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  onClick={() => handleNavClick(item.id)}
+                  className={buttonClass}
+                >
+                  <div className="flex items-center gap-4">
+                    <span className={`${isActive ? 'text-white' : 'text-[#00674F] group-hover:text-white'} transition-colors`}>
+                      {item.icon}
+                    </span>
+                    <span className="font-black uppercase text-[11px] tracking-widest">{item.label}</span>
+                  </div>
+                  {isActive && <ChevronRight size={14} className="text-white/50" />}
+                </Link>
+              );
+            }
+
             return (
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
-                className={`
-                  w-full flex items-center justify-between px-5 py-4 rounded-[20px] transition-all duration-300 group
-                  ${isActive 
-                    ? 'bg-[#00674F] text-white shadow-xl shadow-[#00674F]/10' 
-                    : 'text-white/50 hover:bg-white/5 hover:text-white'}
-                `}
+                className={buttonClass}
               >
                 <div className="flex items-center gap-4">
                   <span className={`${isActive ? 'text-white' : 'text-[#00674F] group-hover:text-white'} transition-colors`}>
